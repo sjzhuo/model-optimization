@@ -335,6 +335,32 @@ def unpack_from_int(value, original_bitrange, target_bitrange, shape):
     An integer Tensor representing the unpacked `value` of the same dtype as
     `value`.
   """
+  if original_bitrange == 12 and target_bitrange == 28:
+    value = tf.reshape(value, [-1])
+    extra_zeros = tf.zeros(tf.math.mod(-tf.shape(value), 3), value.dtype)
+    val = tf.reshape(tf.concat([value, extra_zeros], 0), [-1, 3])
+
+    a = tf.math.mod(val[:, 0], 2**12)
+    b = tf.math.mod(tf.math.floordiv(val[:, 0], 2**12), 2**12)
+    c = tf.math.mod(tf.math.floordiv(val[:, 0], 2**24), 2**
+                    12) + tf.math.mod(val[:, 1], 2**8) * 2**4
+    d = tf.math.mod(tf.math.floordiv(val[:, 1], 2**8), 2**12)
+    e = tf.math.floordiv(val[:, 1], 2**20) + tf.math.mod(val[:, 2], 2**4) * 2**8
+    f = tf.math.mod(tf.math.floordiv(val[:, 2], 2**4), 2**12)
+    g = tf.math.mod(tf.math.floordiv(val[:, 2], 2**16), 2**12)
+
+    a = tf.expand_dims(a, 1)
+    b = tf.expand_dims(b, 1)
+    c = tf.expand_dims(c, 1)
+    d = tf.expand_dims(d, 1)
+    e = tf.expand_dims(e, 1)
+    f = tf.expand_dims(f, 1)
+    g = tf.expand_dims(g, 1)
+
+    unpacked_val = tf.reshape(tf.concat([a, b, c, d, e, f, g], 1), [-1,])
+    unpacked_val = tf.slice(unpacked_val, [0], [tf.reduce_prod(shape)])
+    return tf.reshape(unpacked_val, shape)
+
   value = _expand_to_binary_form(value, target_bitrange)
   value = tf.slice(value, [0], [tf.reduce_prod(shape) * original_bitrange])
   if original_bitrange > 1:
