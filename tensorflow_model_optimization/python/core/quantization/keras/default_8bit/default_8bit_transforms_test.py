@@ -258,8 +258,8 @@ class DefaultTransformsTest(tf.test.TestCase, parameterized.TestCase):
     ).transform()
 
     self.assertContainsSubset(
-        {'sepconv1d_expand', 'separable_conv1d_QAT_SepConv2D',
-         'sepconv1d_squeeze'},
+        {'sepconv1d_expand_1', 'separable_conv1d_QAT_SepConv2D',
+         'sepconv1d_squeeze_1'},
         updated_metadata.keys())
     self.assertEqual(sepconv_model.output_shape, transformed_model.output_shape)
 
@@ -336,6 +336,10 @@ class DefaultTransformsTest(tf.test.TestCase, parameterized.TestCase):
     # can build very minute differences. Hence reducing tol to 1e-5.
     self.assertAllClose(sepconv_model.predict(x), transformed_model.predict(x),
                         atol=1e-5, rtol=1e-5)
+
+  # TODO(pulkitb): Add individual tests for the following transforms.
+  # Conv2DReshapeBatchNormQuantize, Conv2DReshapeBatchNormReLUQuantize
+  # Conv2DReshapeBatchNormActivationQuantize
 
   @parameterized.parameters(
       ('relu', default_8bit_transforms.AddReLUQuantize),
