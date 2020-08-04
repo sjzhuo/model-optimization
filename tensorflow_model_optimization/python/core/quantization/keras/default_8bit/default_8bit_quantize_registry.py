@@ -80,7 +80,7 @@ class QuantizeRegistry(quantize_registry.QuantizeRegistry, _RNNHelper):
       _QuantizeInfo(layers.Softmax, [], []),
       # Enable once verified.
       # layers.ELU,
-      # layers.LeakyReLU,
+      _QuantizeInfo(layers.LeakyReLU, [], [], True),
       # layers.PReLU,
       # layers.ThresholdedReLU,
 
@@ -102,9 +102,9 @@ class QuantizeRegistry(quantize_registry.QuantizeRegistry, _RNNHelper):
       _no_quantize(layers.ZeroPadding1D),
       _no_quantize(layers.ZeroPadding2D),
       # _no_quantize(layers.ZeroPadding3D),
-      # Enable once verified.
-      # layers.SeparableConv1D,
-      # layers.SeparableConv2D,
+
+      # Supported via modifications in Transforms.
+      # layers.SeparableConv1D, layers.SeparableConv2D,
 
       # Core Layers
       _no_quantize(layers.ActivityRegularization),
@@ -142,7 +142,7 @@ class QuantizeRegistry(quantize_registry.QuantizeRegistry, _RNNHelper):
       # layers.Embedding: ['embeddings'],
 
       # BatchNormalization is handled elsewhere, in the cases
-      # where it's preceded by convolutional layers or a Dense layer.
+      # where it's preceded by convolutional layers.
       #   layers.BatchNormalization: [],
 
       # Merge layers to be added.
