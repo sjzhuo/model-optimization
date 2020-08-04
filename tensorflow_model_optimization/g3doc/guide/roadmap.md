@@ -1,4 +1,4 @@
-**Updated: Mar 27th, 2020**
+**Updated: Aug 11th, 2020**
 
 ## Quantization
 
@@ -20,7 +20,11 @@
     [Launched](https://blog.tensorflow.org/2019/05/tf-model-optimization-toolkit-pruning-API.html)
 *   Sparse model execution support in TensorFlow Lite --
     [WIP](https://github.com/tensorflow/model-optimization/issues/173)
-*   Weight clustering API
+
+## Weight clustering
+
+*   During-training weight clustering --
+    [Launched](https://blog.tensorflow.org/...)
 
 ## Compression
 
